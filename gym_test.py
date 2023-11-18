@@ -4,18 +4,20 @@ import gym_examples
 import numpy as np
 
 # Create a new environment
-env = gym.make("gym_examples/JugglingEnv-v0", render_mode="human")
+env = gym.make("gym_examples/BimanualEnv-v0", render_mode="human")
 
 # Reset the environment
 state = env.reset()
 # Run the environment for 1000 steps
+np.random.seed(0)
 for _ in range(1000):
     # print(_)
     # Render the environment
     env.render()
 
     # Take a random action
-    action = env.action_space.sample()
+    action = np.random.uniform(-1, 1, 3)
+    # action = [-1, 0, 0]
 
     # # Step the environment
     state, reward, done, truncated, info = env.step(action)
