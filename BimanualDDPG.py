@@ -282,11 +282,16 @@ if __name__ == "__main__":
     np.random.seed(seed)
     hidden_dims = [256, 512]
     print(sys.argv)
-    num_episodes = 1e4
+    num_episodes = 1e3
     max_steps = 800
     if sys.argv[1] == "train":
         if len(sys.argv) == 4:
-            train(num_episodes, max_steps, sys.argv[2] == "c", sys.argv[3] == "show")
+            train(
+                episodes=num_episodes,
+                max_steps=max_steps,
+                continuous=sys.argv[2] == "c",
+                show=sys.argv[3] == "show",
+            )
         else:
             train()
     else:
