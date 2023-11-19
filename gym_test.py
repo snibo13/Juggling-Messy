@@ -17,7 +17,7 @@ for i in range(10):
         env.render()
 
         # Take a random action
-        action = np.random.uniform(-1, 1, 3)
+        action = np.random.uniform(-1, 1, 6)
         # action = [-1, 0, 0]
 
         # # Step the environment

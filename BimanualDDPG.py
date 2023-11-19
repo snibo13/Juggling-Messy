@@ -282,7 +282,7 @@ if __name__ == "__main__":
     np.random.seed(seed)
     hidden_dims = [256, 512]
     print(sys.argv)
-    num_episodes = 5e3
+    num_episodes = 5e5
     max_steps = 800
     if sys.argv[1] == "train":
         if len(sys.argv) == 4:
