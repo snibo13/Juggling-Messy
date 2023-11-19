@@ -9622,3 +9622,6 @@ WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstabl
 Thu Nov 16 01:05:03 2023
 WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstable. Time = 0.0100.
 
+Sun Nov 19 14:17:11 2023
+WARNING: Nan, Inf or huge value in QVEL at DOF 3. The simulation is unstable. Time = 4.9400.
+
