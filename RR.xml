@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco>
+  <option timestep="0.01" integrator="RK4" gravity="0 0 -9.81"/>
+  <compiler convexhull="false" angle="degree"/>
+  <default>
+    <geom size=".1 .1 .1" type="box"/>
+  </default>
+  <worldbody>
+    <light diffuse=".5 .5 .5" pos="0 0 3" dir="0 0 -1"/>
+    <geom name="floor" pos="0 0 -2" size="5 5 1" type="plane" material="matplane"/>
+
+    <!-- <geom name="workspace" pos="0 1 0" type="capsule" size="0.2 0.01 0.2" material="matbase" contype="2"/> -->
+
+    <body name="base" pos="0 0 0">
+      <geom type="box" size="0.1 0.1 0.1"/>
+      <body name="upper_arm" pos="0 0 0"  gravcomp="1">
+        <inertial pos="0 0 0" mass="1" diaginertia="1.66667e-05 1.66667e-05 1.66667e-05"/>
+        <geom type="capsule" fromto="0 0 0 0 0.5 0" size="0.1" material="matshoulder"/>
+        <joint name="shoulder_roll" type="hinge" axis="0 1 0" limited="true" range="-45 45"/>
+        <joint name="shoulder_joint" type="hinge" axis="-1 0 0" limited="true" range="0 45"/>
+        <body name="lower_arm" pos="0 0.5 0"  gravcomp="1">
+        <inertial pos="0 0 0" mass="1" diaginertia="1.66667e-05 1.66667e-05 1.66667e-05"/>
+          <joint name="elbow_joint" type="hinge" axis="1 0 0"/>
+          <geom type="capsule" fromto="0 0 0 0 0.5 0" size="0.1" material="matelbow"/>
+          <body name="ee" pos ="0 0.5 0.05" euler="90 0 0" gravcomp="1">
+            <inertial pos="0 0 0" mass="1" diaginertia="1.66667e-05 1.66667e-05 1.66667e-05"/>
+            <geom type="box" size="0.15 0.01 0.15" material="matee"/>
+            
+            <body name="backwall" pos="0 0.1 0.15" euler="100 0 0" gravcomp="1">
+              <geom type="box" size="0.15 0.015 0.1" />
+            </body>
+            <body name="frontwall" pos="0 0.1 -0.15" euler="80 0 0" gravcomp="1">
+              <geom type="box" size="0.15 0.015 0.1" />
+            </body>
+            <body name="leftwall" pos="-0.15 0.1 0" euler="90 10 90" gravcomp="1">
+              <geom type="box" size="0.15 0.015 0.1"/>
+            </body>
+            <body name="rightwall" pos="0.15 0.1 0" euler="90 -10 90" gravcomp="1">
+              <geom type="box" size="0.15 0.015 0.1" material="matee"/>
+            </body>
+            <!-- <geom type="box" size="0.01 0.15 0.15" material="matee"/> -->
+            <!-- <geom type="mesh" mesh="cup" density="500"/> -->
+          </body>
+        </body>
+      </body>
+    </body>
+
+    <body name="ball" pos ="0 0.5 2">
+      <inertial pos="0 0 0" mass="10" diaginertia="1 1 1"/>
+      <geom type="sphere" size="0.1" material="matball"/>
+      <joint type="free"/>
+    </body>
+    
+  </worldbody>
+
+  <asset>
+    <material name="matplane" texture="texplane"/>
+    <material name="matbase" reflectance="0.3" rgba="0.5 0.5 0.5 1"/>
+    <material name="matshoulder" reflectance="0.3" rgba="0.8 0.5 0.5 1"/>
+    <material name="matelbow" reflectance="0.3" rgba="0.5 0.8 0.5 1"/>
+    <material name="matee" reflectance="0.3" rgba="0.5 0.5 0.8 1"/>
+    <material name="matball" rgba="1 0 0 1" />
+    <texture name="texplane" type="2d" builtin="checker" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3" width="32" height="32"/>
+    <mesh name="cup" scale="0.001 0.001 0.001" refpos="250 -100.0 250" file="Cup.STL"/>
+</asset>
+
+  <actuator>
+    <motor name="shoulder_actuator" joint="shoulder_joint" ctrlrange="-1 1" gear="20"/>
+    <motor name="elbow_actuator" joint="elbow_joint" ctrlrange="-1 1" gear="20"/>
+    <motor name="roll_acutator" joint="shoulder_roll" ctrlrange="-1 1" gear="10"/>
+  </actuator>
+  <sensor>
+    <actuatorpos name="shoulder_actuator_pos" actuator="shoulder_actuator"/>
+    <actuatorpos name="elbow_actuator_pos" actuator="elbow_actuator"/>
+    <actuatorpos name="roll_actuator_pos" actuator="roll_acutator"/>
+  </sensor>
+</mujoco>
