@@ -174,8 +174,8 @@ def train(episodes=5e4, max_steps=5e2, continuous=False, show=False):
         n_obs,
         n_actions,
         hidden_dims,
-        buffer_size=int(1e5),
-        batch_size=128,
+        buffer_size=int(5e5),
+        batch_size=512,
         tau=1e-2,
         gamma=0.998,
         device=device,
@@ -194,8 +194,6 @@ def train(episodes=5e4, max_steps=5e2, continuous=False, show=False):
     throw_count = 0
     stopping_count = 0
     for episode in tqdm(range(1, int(episodes + 1))):
-        if stopping_count == 5:
-            break
         state, _ = env.reset()
         for step in range(int(max_steps)):
             action = agent.act(state)
@@ -280,9 +278,9 @@ if __name__ == "__main__":
     seed = 1
     random.seed(seed)
     np.random.seed(seed)
-    hidden_dims = [256, 512]
+    hidden_dims = [256, 256]
     print(sys.argv)
-    num_episodes = 5e5
+    num_episodes = 1e4
     max_steps = 800
     if sys.argv[1] == "train":
         if len(sys.argv) == 4:
