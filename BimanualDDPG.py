@@ -18,7 +18,9 @@ class Actor(nn.Module):
     def __init__(self, num_obs, hidden_size, num_actions, lr=1e-4):
         super(Actor, self).__init__()
 
+        self.hidden_size = hidden_size
         self.linear1 = nn.Linear(num_obs, hidden_size[0])
+        self.norm1 = nn.BatchNorm1d(hidden_size[0])
         self.linear2 = nn.Linear(hidden_size[0], hidden_size[1])
         self.linear3 = nn.Linear(hidden_size[1], num_actions)
 
@@ -26,7 +28,9 @@ class Actor(nn.Module):
 
     def forward(self, state):
         x = torch.relu(self.linear1(state))
+        # x = self.norm1(x)
         x = torch.relu(self.linear2(x))
+        # x = nn.BatchNorm1d(x.shape[1])(x)
         x = torch.tanh(self.linear3(x))  # Output joint torques in range -1, 1
         return x
 
@@ -42,8 +46,11 @@ class Critic(nn.Module):
         self.optimizer = torch.optim.Adam(self.parameters(), lr=lr, weight_decay=1e-2)
 
     def forward(self, state, action):
+        # TODO: Try adding batch normalization
         x = torch.relu(self.linear1(state))
+        # x = nn.BatchNorm1d(x.shape[1])(x)
         x = torch.relu(self.linear2(torch.cat([x, action], dim=1)))
+        # x = nn.BatchNorm1d(x.shape[1])(x)
         x = self.linear3(x)
         return x
 
@@ -175,7 +182,7 @@ def train(episodes=5e4, max_steps=5e2, continuous=False, show=False):
         n_actions,
         hidden_dims,
         buffer_size=int(5e5),
-        batch_size=512,
+        batch_size=1024,
         tau=1e-2,
         gamma=0.998,
         device=device,
@@ -278,7 +285,7 @@ if __name__ == "__main__":
     seed = 1
     random.seed(seed)
     np.random.seed(seed)
-    hidden_dims = [256, 256]
+    hidden_dims = [512, 512]
     print(sys.argv)
     num_episodes = 1e4
     max_steps = 800
