@@ -1,0 +1,3 @@
+[submodule "gym-examples"]
+	path = gym-examples
+	url = https://github.com/Farama-Foundation/gym-examples
