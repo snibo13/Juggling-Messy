@@ -189,10 +189,28 @@ def train(episodes=5e4, max_steps=5e2, continuous=False, show=False):
     )
 
     if continuous:
-        agent.actor.load_state_dict(torch.load("bimanual-actor.pth"))
-        agent.critic.load_state_dict(torch.load("bimanual-critic.pth"))
-        agent.actor_target.load_state_dict(torch.load("bimanual-actor_target.pth"))
-        agent.critic_target.load_state_dict(torch.load("bimanual-critic_target.pth"))
+        agent.actor.load_state_dict(
+            torch.load("bimanual-actor.pth"), strict=False, map_location=device
+        )
+        agent.critic.load_state_dict(
+            torch.load("bimanual-critic.pth"), strict=False, map_location=device
+        )
+        agent.actor.optimizer.load_state_dict(
+            torch.load("bimanual-actor-optimizer.pth"),
+            strict=False,
+            map_location=device,
+        )
+        agent.critic.optimizer.load_state_dict(
+            torch.load("bimanual-critic-optimizer.pth"),
+            strict=False,
+            map_location=device,
+        )
+        agent.actor_target.load_state_dict(
+            torch.load("bimanual-actor_target.pth"), strict=False, map_location=device
+        )
+        agent.critic_target.load_state_dict(
+            torch.load("bimanual-critic_target.pth"), strict=False, map_location=device
+        )
 
     rewards = []
     rs = []
@@ -236,6 +254,13 @@ def train(episodes=5e4, max_steps=5e2, continuous=False, show=False):
             torch.save(agent.actor_target.state_dict(), "bimanual-actor_target.pth")
             torch.save(agent.critic.state_dict(), "bimanual-critic.pth")
             torch.save(agent.critic_target.state_dict(), "bimanual-critic_target.pth")
+            torch.save(
+                agent.actor.optimizer.state_dict(), "bimanual-actor-optimizer.pth"
+            )
+            torch.save(
+                agent.critic.optimizer.state_dict(), "bimanual-critic-optimizer.pth"
+            )
+
     plt.plot(catches)
     plt.show()
     plt.plot(np.cumsum(rewards) / np.arange(1, len(rewards) + 1))
@@ -259,10 +284,12 @@ def evaluate():
     actor = Actor(n_obs, hidden_dims, n_actions).to(device)
     critic = Critic(n_obs, hidden_dims, n_actions).to(device)
 
-    actor.load_state_dict(torch.load("bimanual-actor.pth"))
-    critic.load_state_dict(torch.load("bimanual-critic.pth"))
-    actor.eval()
-    critic.eval()
+    actor.load_state_dict(
+        torch.load("bimanual-actor.pth"), strict=False, map_location=device
+    )
+    critic.load_state_dict(
+        torch.load("bimanual-critic.pth"), strict=False, map_location=device
+    )
 
     state, _ = env.reset()
 
@@ -285,6 +312,8 @@ if __name__ == "__main__":
     seed = 1
     random.seed(seed)
     np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
     hidden_dims = [512, 512]
     print(sys.argv)
     num_episodes = 1e4
