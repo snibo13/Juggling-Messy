@@ -190,26 +190,28 @@ def train(episodes=5e4, max_steps=5e2, continuous=False, show=False):
 
     if continuous:
         agent.actor.load_state_dict(
-            torch.load("bimanual-actor.pth"), strict=False, map_location=device
+            torch.load("bimanual-actor.pth", strict=False, map_location=device)
         )
         agent.critic.load_state_dict(
-            torch.load("bimanual-critic.pth"), strict=False, map_location=device
+            torch.load("bimanual-critic.pth", strict=False, map_location=device)
         )
         agent.actor.optimizer.load_state_dict(
-            torch.load("bimanual-actor-optimizer.pth"),
-            strict=False,
-            map_location=device,
+            torch.load(
+                "bimanual-actor-optimizer.pth",
+                strict=False,
+                map_location=device,
+            )
         )
         agent.critic.optimizer.load_state_dict(
-            torch.load("bimanual-critic-optimizer.pth"),
-            strict=False,
-            map_location=device,
+            torch.load(
+                "bimanual-critic-optimizer.pth", strict=False, map_location=device
+            )
         )
         agent.actor_target.load_state_dict(
-            torch.load("bimanual-actor_target.pth"), strict=False, map_location=device
+            torch.load("bimanual-actor_target.pth", strict=False, map_location=device)
         )
         agent.critic_target.load_state_dict(
-            torch.load("bimanual-critic_target.pth"), strict=False, map_location=device
+            torch.load("bimanual-critic_target.pth", strict=False, map_location=device)
         )
 
     rewards = []
@@ -285,10 +287,10 @@ def evaluate():
     critic = Critic(n_obs, hidden_dims, n_actions).to(device)
 
     actor.load_state_dict(
-        torch.load("bimanual-actor.pth"), strict=False, map_location=device
+        torch.load("bimanual-actor.pth", map_location=device), strict=True
     )
     critic.load_state_dict(
-        torch.load("bimanual-critic.pth"), strict=False, map_location=device
+        torch.load("bimanual-critic.pth", map_location=device), strict=True
     )
 
     state, _ = env.reset()
