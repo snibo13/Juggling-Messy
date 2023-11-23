@@ -280,11 +280,14 @@ def evaluate():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Running on", device)
 
+    state, _ = env.reset()
+    print(state.shape)
+
     n_obs = env.observation_space.shape[0]
     n_actions = env.action_space.shape[0]
 
-    actor = Actor(n_obs, hidden_dims, n_actions).to(device)
-    critic = Critic(n_obs, hidden_dims, n_actions).to(device)
+    actor = Actor(29, hidden_dims, n_actions).to(device)
+    critic = Critic(29, hidden_dims, n_actions).to(device)
 
     actor.load_state_dict(
         torch.load("bimanual-actor.pth", map_location=device), strict=True
@@ -292,8 +295,6 @@ def evaluate():
     critic.load_state_dict(
         torch.load("bimanual-critic.pth", map_location=device), strict=True
     )
-
-    state, _ = env.reset()
 
     for episode in range(10):
         state, _ = env.reset()
